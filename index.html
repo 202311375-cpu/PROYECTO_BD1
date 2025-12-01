@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Northwind Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<div id="sidebar" class="sidebar">
+    <div class="sidebar-title">NORTHWIND</div>
+
+    <div class="menu-item">
+        <button class="menu-btn"><i class="fas fa-home"></i> Inicio</button>
+        <div class="submenu">
+            <button class="submenu-btn" data-target="resumen">Resumen</button>
+            <button class="submenu-btn" data-target="ejecutar-sp">Ejecutar SP Prueba</button>
+            <button class="submenu-btn" data-target="ultimo-pedido">Ver Último Pedido</button>
+        </div>
+    </div>
+
+    <div class="menu-item">
+        <button class="menu-btn"><i class="fas fa-chart-line"></i> Ventas</button>
+        <div class="submenu">
+            <button class="submenu-btn" data-target="ventas-cliente">Ventas por Cliente</button>
+            <button class="submenu-btn" data-target="ventas-empleado">Ventas por Empleado</button>
+            <button class="submenu-btn" data-target="ventas-fecha">Ventas por Fecha</button>
+        </div>
+    </div>
+
+    <div class="menu-item">
+        <button class="menu-btn"><i class="fas fa-users"></i> Clientes</button>
+        <div class="submenu">
+            <button class="submenu-btn" data-target="insertar-cliente">Insertar Cliente</button>
+            <button class="submenu-btn" data-target="cliente-pedido">Cliente + Pedido</button>
+            <button class="submenu-btn" data-target="actualizar-cliente">Actualizar Cliente</button>
+        </div>
+    </div>
+
+    <div class="menu-item">
+        <button class="menu-btn"><i class="fas fa-box"></i> Pedidos</button>
+        <div class="submenu">
+            <button class="submenu-btn" data-target="registrar-pedido">Registrar Pedido</button>
+            <button class="submenu-btn" data-target="eliminar-pedido">Eliminar Pedido</button>
+            <button class="submenu-btn" data-target="historial-pedidos">Historial</button>
+        </div>
+    </div>
+
+    <div class="menu-item">
+        <button class="menu-btn"><i class="fas fa-table"></i> Vistas SQL</button>
+        <div class="submenu">
+            <button class="submenu-btn" data-target="vista-pedidos-productos">Pedidos Productos</button>
+            <button class="submenu-btn" data-target="vista-ventas-cliente">Ventas por Cliente</button>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

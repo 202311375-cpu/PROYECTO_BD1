@@ -1,0 +1,95 @@
+body {
+    margin: 0;
+    display: flex;
+    font-family: Arial, sans-serif;
+}
+
+.sidebar {
+    width: 280px;
+    height: 100vh;
+    background: #0D1B2A;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.sidebar-title {
+    font-size: 1.4rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    padding-bottom: 0.5rem;
+}
+
+.menu-item {
+    margin-bottom: 0.5rem;
+}
+
+/* Botones principales */
+.menu-btn {
+    width: 100%;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.1rem;
+    padding: 0.6rem 0.8rem;
+    text-align: left;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background 0.2s ease;
+    display: flex;
+    align-items: center;
+}
+
+.menu-btn i {
+    margin-right: 10px;
+    width: 20px; /* alinea iconos */
+    text-align: center;
+}
+
+.menu-btn:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+/* Submenús */
+.submenu {
+    display: none;
+    flex-direction: column;
+    margin-left: 1rem;
+    margin-top: 0.2rem;
+}
+
+.submenu-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1rem;
+    padding: 0.4rem 0.8rem;
+    text-align: left;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background 0.2s ease;
+    display: flex;
+    align-items: center;
+}
+
+.submenu-btn i {
+    margin-right: 8px;
+    width: 20px;
+    text-align: center;
+    font-size: 0.9rem; /* más pequeño que los botones principales */
+}
+
+.submenu-btn:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+/* Contenido */
+.content {
+    flex: 1;
+    padding: 2rem;
+}
