@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Northwind - Grupo 2</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { padding: 20px; background-color: #f8f9fa; }
+        .card { margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4 text-primary">Proyecto Base de Datos - Grupo 2</h1>
+
+        <div class="row">
+            <div class="col-md-5">
+
+                <div class="card">
+                    <div class="card-header bg-success text-white">Registrar Pedido (SP)</div>
+                    <div class="card-body">
+                        <input type="text" id="custId" class="form-control mb-2" placeholder="ID Cliente (ej. ALFKI)">
+                        <input type="number" id="empId" class="form-control mb-2" placeholder="ID Empleado (ej. 1)">
+                        <input type="number" id="prodId" class="form-control mb-2" placeholder="ID Producto (ej. 10)">
+                        <button onclick="registrarPedido()" class="btn btn-success w-100">Registrar</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header bg-warning text-dark">Actualizar Cliente</div>
+                    <div class="card-body">
+                        <input type="text" id="updCustId" class="form-control mb-2" placeholder="ID Cliente a editar">
+                        <input type="text" id="newPhone" class="form-control mb-2" placeholder="Nuevo Teléfono">
+                        <input type="text" id="newAddr" class="form-control mb-2" placeholder="Nueva Dirección">
+                        <button onclick="actualizarCliente()" class="btn btn-warning w-100">Actualizar</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header bg-danger text-white">Eliminar Pedido</div>
+                    <div class="card-body">
+                        <input type="number" id="delOrderId" class="form-control mb-2" placeholder="ID Pedido a borrar">
+                        <button onclick="eliminarPedido()" class="btn btn-danger w-100">Eliminar (Cascada)</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-7">
+                <div class="card">
+                    <div class="card-header bg-primary text-white d-flex justify-content-between">
+                        <span>Resultados</span>
+                        <button onclick="verReporte()" class="btn btn-light btn-sm">Ver Reporte Ventas</button>
+                    </div>
+                    <div class="card-body">
+                        <div id="resultado" class="alert alert-secondary">
+                            Los resultados aparecerán aquí...
+                        </div>
+                        <div style="max-height: 500px; overflow-y: auto;">
+                            <table class="table table-striped" id="tablaResultados" style="display:none;">
+                                <thead>
+                                    <tr><th>Cliente</th><th>Pedidos</th><th>Ventas ($)</th></tr>
+                                </thead>
+                                <tbody id="tablaBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = ""; // Si estás en el mismo puerto, déjalo vacío o usa "http://127.0.0.1:8000"
+
+        // CORRECCIÓN: Aquí decía "async def", debe ser "async function"
+        async function verReporte() {
+            try {
+                const res = await fetch(`${API_URL}/reportes/ventas-por-cliente`);
+                if (!res.ok) throw new Error("Error en la petición");
+                const data = await res.json();
+
+                // Mostrar tabla
+                document.getElementById('resultado').style.display = 'none';
+                document.getElementById('tablaResultados').style.display = 'table';
+
+                const tbody = document.getElementById('tablaBody');
+                tbody.innerHTML = "";
+                data.forEach(row => {
+                    tbody.innerHTML += `<tr><td>${row.Cliente}</td><td>${row.TotalPedidos}</td><td>$${row.TotalVentas.toFixed(2)}</td></tr>`;
+                });
+            } catch (error) {
+                alert("Error al cargar reporte: " + error.message);
+            }
+        }
+
+        async function registrarPedido() {
+            const payload = {
+                "CustomerID": document.getElementById('custId').value,
+                "EmployeeID": parseInt(document.getElementById('empId').value),
+                "OrderDate": new Date().toISOString().split('T')[0],
+                "ShipCountry": "Peru",
+                "ProductID": parseInt(document.getElementById('prodId').value),
+                "UnitPrice": 20.00,
+                "Quantity": 5,
+                "Discount": 0
+            };
+
+            try {
+                const res = await fetch(`${API_URL}/pedidos/registrar-completo`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                alert(JSON.stringify(data));
+            } catch (e) { alert("Error: " + e); }
+        }
+
+        async function actualizarCliente() {
+            const id = document.getElementById('updCustId').value;
+            const payload = {
+                "Phone": document.getElementById('newPhone').value,
+                "Address": document.getElementById('newAddr').value
+            };
+            try {
+                const res = await fetch(`${API_URL}/clientes/${id}`, {
+                    method: 'PUT',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                alert(data.message || JSON.stringify(data));
+            } catch (e) { alert("Error: " + e); }
+        }
+
+        async function eliminarPedido() {
+            const id = document.getElementById('delOrderId').value;
+            try {
+                const res = await fetch(`${API_URL}/pedidos/${id}`, { method: 'DELETE' });
+                const data = await res.json();
+                alert(data.message);
+            } catch (e) { alert("Error: " + e); }
+        }
+    </script>
+</body>
+</html>
