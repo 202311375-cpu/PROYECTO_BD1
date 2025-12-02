@@ -14,9 +14,12 @@ from pydantic import BaseModel
 # Asegúrate de que la IP y credenciales sean correctas
 #SQLALCHEMY_DATABASE_URL = "mssql+pyodbc://sa:1234@192.168.31.188/Northwind?driver=ODBC+Driver+17+for+SQL+Server"
 SQLALCHEMY_DATABASE_URL = (
-    "mssql+pyodbc://FABRIZIO:246135@/Northwind?"
-    "driver=ODBC+Driver+18+for+SQL+Server"
-    "&server=192.168.68.118\\SQLEXPRESS"
+    "mssql+pyodbc:///?odbc_connect="
+    "DRIVER=ODBC+Driver+18+for+SQL+Server;"
+    "SERVER=FABRIZIO\\SQLEXPRESS;"
+    "DATABASE=Northwind;"
+    "Trusted_Connection=yes;"
+    "TrustServerCertificate=yes;"
 )
 
 # Configuración del Engine
@@ -122,21 +125,24 @@ def obtener_ventas_por_cliente(db: Session = Depends(get_db)):
     [Consulta 1 del Doc] Ventas por Cliente usando JOIN y GROUP BY.
     """
     query = text("""
-                 SELECT c.CompanyName                   AS Cliente,
-                        COUNT(o.OrderID)                AS TotalPedidos,
-                        SUM(od.Quantity * od.UnitPrice) AS TotalVentas
-                 FROM Customers c
-                          INNER JOIN Orders o ON c.CustomerID = o.CustomerID
-                          INNER JOIN [
-                 Order Details] od
-                 ON o.OrderID = od.OrderID
-                 GROUP BY c.CompanyName
-                 ORDER BY TotalVentas DESC
-                 """)
+        SELECT c.CompanyName                   AS Cliente,
+               COUNT(o.OrderID)                AS TotalPedidos,
+               SUM(od.Quantity * od.UnitPrice) AS TotalVentas
+        FROM Customers c
+        INNER JOIN Orders o ON c.CustomerID = o.CustomerID
+        INNER JOIN [Order Details] od ON o.OrderID = od.OrderID
+        GROUP BY c.CompanyName
+        ORDER BY TotalVentas DESC
+    """)
+    
     result = db.execute(query).fetchall()
 
     return [
-        {"Cliente": row[0], "TotalPedidos": row[1], "TotalVentas": float(row[2]) if row[2] else 0.0}
+        {
+            "Cliente": row.Cliente,
+            "TotalPedidos": row.TotalPedidos,
+            "TotalVentas": float(row.TotalVentas or 0)
+        }
         for row in result
     ]
 
@@ -156,13 +162,13 @@ def obtener_historial_cliente(customer_id: str, db: Session = Depends(get_db)):
                 "OrderDate": str(row[1]),
                 "ProductName": row[2],
                 "Quantity": row[3],
-                "UnitPrice": float(row[4]),
-                "TotalLinea": float(row[5])
-            } for row in result
+                "UnitPrice": float(row[4] or 0),
+                "TotalLinea": float(row[5] or 0)
+            }
+            for row in result
         ]
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error en SP: {str(e)}")
-
 
 # --- CREACIÓN (CREATE) ---
 
