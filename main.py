@@ -12,7 +12,12 @@ from pydantic import BaseModel
 # 1. CONFIGURACIÓN DE BASE DE DATOS
 # ==========================================
 # Asegúrate de que la IP y credenciales sean correctas
-SQLALCHEMY_DATABASE_URL = "mssql+pyodbc://sa:1234@192.168.31.188/Northwind?driver=ODBC+Driver+17+for+SQL+Server"
+#SQLALCHEMY_DATABASE_URL = "mssql+pyodbc://sa:1234@192.168.31.188/Northwind?driver=ODBC+Driver+17+for+SQL+Server"
+SQLALCHEMY_DATABASE_URL = (
+    "mssql+pyodbc://FABRIZIO:246135@/Northwind?"
+    "driver=ODBC+Driver+18+for+SQL+Server"
+    "&server=192.168.68.118\\SQLEXPRESS"
+)
 
 # Configuración del Engine
 engine = create_engine(
